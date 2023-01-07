@@ -10,7 +10,7 @@
                 @else
                     bg-red-600
                 @endif">
-                    <img src="{{asset('storage/icons/' . $todayReport->type . '.png')}}" class="h-2/3" alt="income">
+                    <img src="{{asset('/icons/' . $todayReport->type . '.png')}}" class="h-2/3" alt="income">
                 </div>
                 <div class="ml-2 w-5/6 h-full flex flex-col justify-between">
                     <p class="font-poppins font-medium text-[14px]">{{$todayReport->name}}
@@ -43,7 +43,7 @@
                 @else
                     bg-red-600
                 @endif">
-                    <img src="{{asset('storage/icons/' . $yesterdayReport->type . '.png')}}" class="h-2/3" alt="income">
+                    <img src="{{asset('icons/' . $yesterdayReport->type . '.png')}}" class="h-2/3" alt="income">
                 </div>
                 <div class="ml-2 w-5/6">
                     <p class="font-poppins font-medium text-[14px]">{{$yesterdayReport->name}}

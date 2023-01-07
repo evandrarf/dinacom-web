@@ -1,6 +1,6 @@
 <div class="flex w-[380px] items-center justify-between bg-mainblue py-4 rounded-2xl text-white px-8">
     <div>
-        <img src="{{asset('/storage/icons/insight-purple.png')}}" alt="insight" class="w-12">
+        <img src="{{asset('icons/insight-purple.png')}}" alt="insight" class="w-12">
     </div>
     <div class="flex flex-col justify-center  ml-2">
         <p class="font-poppins font-medium text-[18px]">Insights</p>
