@@ -14,15 +14,23 @@
     <div>
         <div class="w-full h-[1px] bg-gray-300 mt-2"></div>
         <div class="w-full flex mt-2">
-            <div class="px-4 py-1 bg-blue-600 text-white text-xs rounded-full mr-3">{{number_format($thisMonthIncome /
+            <div class="px-4 py-1 bg-blue-600 text-white text-xs rounded-full mr-3">@if ($thisMonthSpending != 0)
+                {{number_format($thisMonthIncome /
                 ($thisMonthIncome +
                 $thisMonthSpending) *
-                100, 2, ',', '.')}}% Income</div>
-            <div class="px-4 py-1 bg-red-600 text-white text-xs rounded-full">{{number_format($thisMonthSpending /
+                100, 2, ',', '.')}}%
+                @else
+                {{number_format($thisMonthIncome, 2, ',', '.')}}%
+                @endif Income</div>
+            <div class="px-4 py-1 bg-red-600 text-white text-xs rounded-full">@if ($thisMonthIncome != 0)
+                {{number_format($thisMonthSpending /
                 ($thisMonthSpending
                 +
                 $thisMonthIncome) *
-                100, 2, ',', '.')}}% Expense</div>
+                100, 2, ',', '.')}}%
+                @else
+                {{number_format($thisMonthIncome, 2, ',', '.')}}%
+                @endif Expense</div>
         </div>
     </div>
 </div>

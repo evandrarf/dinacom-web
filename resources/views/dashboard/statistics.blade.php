@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('information')
-<div class="w-full h-full flex">
+<div class="w-full h-full flex font-poppins">
     <div class="w-2/3  h-full">
         <div class="w-full h-2/3 ">
             @include('components.statistics.statistics-chart')
