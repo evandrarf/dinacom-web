@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class ReportServiceImpl implements ReportService
 {
     public $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    public $months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     function getAllBalance(): int
     {
@@ -103,6 +104,11 @@ class ReportServiceImpl implements ReportService
             ->whereDate('created_at', $day)->latest()->get();
     }
 
+    function getYearReports($year)
+    {
+        return Report::whereYear('date', $year)->get();
+    }
+
     function getWeekReports($week)
     {
         return Report::select("*")
@@ -136,26 +142,112 @@ class ReportServiceImpl implements ReportService
         return $income;
     }
 
+
     function getWeekSpendingOne($week)
     {
         $reports = $this->getWeekReports($week);
 
-        $spending = [];
+        $balance = [];
 
         $days = $this->days;
 
         foreach ($days as $day) {
-            $spending[$day] = 0;
+            $balance[$day] = 0;
         }
 
 
         foreach ($reports as $report) {
             $day = Carbon::createFromFormat('Y-m-d', $report->date)->format('l');
             if ($report->type == 'spending') {
-                // dd($spending);
-                $spending[$day] += $report->amount;
+                $balance[$day] += $report->amount;
             }
         }
-        return $spending;
+        return $balance;
+    }
+
+    function getMonthSpendingOne($date)
+    {
+        $reports = $this->getMonthReport($date->month);
+        $totalDays = $this->getMonthTotalDays($date);
+
+        $balance = [];
+
+        for ($i = 1; $i <= $totalDays; $i++) {
+            $balance[$i] = 0;
+        }
+
+        foreach ($reports as $report) {
+            if ($report->type == 'spending') {
+                $reportDate = (int)Carbon::createFromFormat('Y-m-d', $report->date)->format('d');
+                $balance[$reportDate] += $report->amount;
+            }
+        }
+
+        return $balance;
+    }
+
+    function getMonthTotalDays($date)
+    {
+        return $date->daysInMonth;
+    }
+
+    function getMonthIncomeOne($date)
+    {
+        $reports = $this->getMonthReport($date->month);
+        $totalDays = $this->getMonthTotalDays($date);
+
+        $balance = [];
+
+        for ($i = 1; $i <= $totalDays; $i++) {
+            $balance[$i] = 0;
+        }
+
+        foreach ($reports as $report) {
+            if ($report->type == 'income') {
+                $reportDate = (int)Carbon::createFromFormat('Y-m-d', $report->date)->format('d');
+                $balance[$reportDate] += $report->amount;
+            }
+        }
+
+        return $balance;
+    }
+
+    function getYearSpendingOne($year)
+    {
+        $reports = $this->getYearReports($year);
+        $months = $this->months;
+
+        $balance = [];
+
+        foreach ($months as $month) {
+            $balance[$month] = 0;
+        }
+
+        foreach ($reports as $report) {
+            $month = Carbon::createFromFormat('Y-m-d', $report->date)->format('M');
+            if ($report->type == 'spending') {
+                $balance[$month] += $report->amount;
+            }
+        }
+        return $balance;
+    }
+    function getYearIncomeOne($year)
+    {
+        $reports = $this->getYearReports($year);
+        $months = $this->months;
+
+        $balance = [];
+
+        foreach ($months as $month) {
+            $balance[$month] = 0;
+        }
+
+        foreach ($reports as $report) {
+            $month = Carbon::createFromFormat('Y-m-d', $report->date)->format('M');
+            if ($report->type == 'income') {
+                $balance[$month] += $report->amount;
+            }
+        }
+        return $balance;
     }
 }

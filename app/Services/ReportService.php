@@ -31,4 +31,15 @@ interface ReportService
     function getWeekSpendingOne($week);
 
     function getWeekReports($week);
+
+    function getMonthSpendingOne($date);
+
+    function getMonthIncomeOne($date);
+
+    function getYearReports($year);
+
+    function getYearSpendingOne($year);
+
+    function getYearIncomeOne($year);
+    function getMonthTotalDays($date);
 }

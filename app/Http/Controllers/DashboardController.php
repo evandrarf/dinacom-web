@@ -67,18 +67,40 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function stats()
+    public function stats(Request $request)
     {
-        $week = [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()];
-        $weekSpending = $this->reportService->getWeekSpendingOne($week);
-        $weekIncome = $this->reportService->getWeekIncomeOne($week);
+        $rangeTime = $request->query('rangeTime');
 
-        $day = $this->reportService->days;
+        $spendingData = null;
+        $incomeData = null;
+        $labelData = [];
+
+        if ($rangeTime == 'month') {
+            $date = Carbon::now();
+            $spendingData = $this->reportService->getMonthSpendingOne($date);
+            $incomeData = $this->reportService->getMonthIncomeOne($date);
+            for ($i = 1; $i <= $this->reportService->getMonthTotalDays($date); $i++) {
+                $labelData[] = (string)$i;
+            }
+        } else if ($rangeTime == 'year') {
+            $year = Carbon::now()->year;
+            $spendingData = $this->reportService->getYearSpendingOne($year);
+            $incomeData = $this->reportService->getYearIncomeOne($year);
+            $labelData = $this->reportService->months;
+        } else {
+
+            $week = [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()];
+            $spendingData = $this->reportService->getWeekSpendingOne($week);
+            $incomeData = $this->reportService->getWeekIncomeOne($week);
+            $labelData = $this->reportService->days;
+        }
+
         return view('dashboard.statistics', [
             'user' => auth()->user(),
-            'spendingData' => $weekSpending,
-            'incomeData' => $weekIncome,
-            'labelData' => $day,
+            'spendingData' => $spendingData,
+            'incomeData' => $incomeData,
+            'labelData' => $labelData,
+            'rangeTimeSelected' => $rangeTime
         ]);
     }
 

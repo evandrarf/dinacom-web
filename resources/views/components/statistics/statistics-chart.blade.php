@@ -1,12 +1,13 @@
 <div class="flex w-full justify-between pr-14">
     <h3 class="font-medium">Activity</h3>
-    <form action="">
+    <form class="{{route('dashboard.stats')}}" method="GET">
         <select name="rangeTime"
             class=" text-xs flex  justify-between items-center py-2 border-gray-400 rounded-md focus:border-gray-300 ring-0 focus:outline-none font-poppins font-light"
             id="rangeTime">
-            <option value="week" selected>This Week</option>
-            <option value="month">This Month</option>
-            <option value="year">This Year</option>
+            <option value="week" @if ($rangeTimeSelected=="week" || $rangeTimeSelected !='month' || $rangeTimeSelected
+                !='year' ) selected @endif>This Week</option>
+            <option value="month" @if ($rangeTimeSelected=="month" ) selected @endif>This Month</option>
+            <option value="year" @if ($rangeTimeSelected=="year" ) selected @endif>This Year</option>
         </select>
     </form>
 </div>
@@ -14,6 +15,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const statsChart = document.getElementById('stats-chart');
+    const rangeTime = document.getElementById("rangeTime")
+
+    rangeTime.addEventListener('change', async () => {
+        rangeTime.closest('form').submit();
+    });
+
+    console.log({{Js::from($labelData)}})
 
     const incomeData = Object.values({{Js::from($incomeData)}});
     const spendingData = Object.values({{Js::from($spendingData)}});

@@ -22,4 +22,8 @@ class ReportController extends Controller
 
         return redirect()->route('dashboard.actions');
     }
+
+    public function getReportInRange()
+    {
+    }
 }
