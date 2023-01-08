@@ -12,7 +12,6 @@ class ReportController extends Controller
         $report = new Report();
 
         $report->name = $request->name;
-        $report->description = $request->description;
         $report->amount = $request->amount;
         $report->note = $request->note;
         $report->date = $request->date;

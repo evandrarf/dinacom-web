@@ -12,7 +12,7 @@ interface ReportService
 
     function getSpendingBalance(): int;
 
-    function getAllReports(): array;
+    function getAllReports();
 
     function getReportsInMonth($month);
 

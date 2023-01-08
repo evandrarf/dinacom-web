@@ -35,19 +35,32 @@
                 label: 'Spending',
                 data: {{Js::from($spendingData)}},
                 borderWidth: 1,
-                backgroundColor: 'rgba(235,27,0,0.8)',
+                backgroundColor: 'rgba(235,27,0,0.6)',
+                borderColor: 'rgba(235,27,0,1)',
             }, {
                 label: 'Income',
                 data: {{Js::from($incomeData)}},
                 borderWidth: 1,
-                backgroundColor: 'rgba(3,38,235,0.75)',
+                backgroundColor: 'rgba(3,38,235,0.7)',
+                borderColor: 'rgba(3,38,235,1)',
             }]
             },
             options: {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        suggestedMax: Math.max(...incomeData, ...spendingData) + 20 / 100 * Math.max(...incomeData, ...spendingData)
+                        suggestedMax: Math.max(...incomeData, ...spendingData) + 10 / 100 * Math.max(...incomeData, ...spendingData),
+                        title: {
+                            display: true,
+                            text: 'Total (IDR)',
+                            font: {
+                                family: "Poppins",
+                                size: 12,
+                            },
+                            padding: {
+                                bottom: 20
+                            }
+                        },
                     }
                 },
                 responsive: true,

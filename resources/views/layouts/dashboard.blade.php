@@ -21,7 +21,7 @@
                 <img src="{{asset('/icons/stats-icon.png')}}" class="w-8" alt="home">
                 <span class="font-inter text-[10px] mt-1 text-white">Stats</span>
             </a>
-            <a href="{{route('dashboard.actions')}}" class="mt-6 flex justify-center items-center w-20 h-20 rounded-full flex-col @if (Route::current()->getName() == 'dashboard.actions')
+            <a href="{{route('dashboard.actions.reports')}}" class="mt-6 flex justify-center items-center w-20 h-20 rounded-full flex-col @if (Route::current()->getName() == 'dashboard.actions')
                 bg-bluelowopacity
             @endif">
                 <img src="{{asset('/icons/action-icon.png')}}" class="w-8" alt="home">
@@ -66,7 +66,7 @@
                 <a href="{{route('dashboard.settings')}}"
                     class="cursor-pointer items-center justify-between flex flex-row max-w-xs">
                     <div class="w-12 h-12 rounded-full border-[1px] border-gray-200 shadow-sm overflow-hidden">
-                        <img src="{{asset('storage/' . $user->profile_picture)}}" class="object-cover"
+                        <img src="{{asset('storage/' . $user->profile_picture)}}" class="h-full w-full object-cover"
                             alt="profile-pic">
                     </div>
                     <div class="flex flex-col ml-4">

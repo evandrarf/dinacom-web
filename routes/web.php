@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,12 @@ Route::get('/dashboard/stats', [DashboardController::class, 'stats'])->middlewar
 Route::get('/dashboard/actions', [DashboardController::class, 'actions'])->middleware(['auth', 'verified'])->name('dashboard.actions');
 Route::get('/dashboard/settings', [DashboardController::class, 'settings'])->middleware(['auth', 'verified'])->name('dashboard.settings');
 
+Route::get('/dashboard/actions/reports', [DashboardController::class, 'reports'])->middleware(['auth', 'verified'])->name('dashboard.actions.reports');
+Route::get('/dashboard/actions/events', [DashboardController::class, 'events'])->middleware(['auth', 'verified'])->name('dashboard.actions.events');
+
 Route::post('/reports/store', [ReportController::class, 'store'])->middleware(['auth', 'verified'])->name('reports.store');
+
+Route::post('/events/store', [EventController::class, 'store'])->middleware(['auth', 'verified'])->name('events.store');;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

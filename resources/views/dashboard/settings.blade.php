@@ -5,8 +5,8 @@
 
     <div class="w-1/4 flex flex-col justify-start h-full">
         <div class="w-72 h-72 rounded-full overflow-hidden">
-            <img src="{{asset('storage/' . $user->profile_picture)}}" id="profile_preview" class="object-cover w-full"
-                alt="profile_picture">
+            <img src="{{asset('storage/' . $user->profile_picture)}}" id="profile_preview"
+                class="object-cover h-full w-full" alt="profile_picture">
         </div>
         <div class="mt-8 font-inter">
             <h1 class="text-3xl font-semibold">{{$user->name}}</h1>
@@ -56,6 +56,5 @@
                 class="mt-8 h-12 text-white font-poppins font-semibold text-lg rounded-lg bg-mainblue w-full">Submit</button>
         </form>
     </div>
-
 </div>
 @endsection

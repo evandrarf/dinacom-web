@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Services\ReportService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -43,10 +44,6 @@ class DashboardController extends Controller
         $thisMonthIncome = $this->reportService->getMonthIncomeBalance(Carbon::now()->month);
         $thisMonthSpending =  $this->reportService->getMonthSpendingBalance(Carbon::now()->month);
 
-        // dd($this->reportService->getMonthIncomeBalance(Carbon::now()->month));
-        // dd(Carbon::today()->toDateString());
-        // dd($this->reportService->getDayReport(Carbon::today()->toDateString()));
-
         $todayReports = $this->reportService->getDayReport(Carbon::today()->toDateString());
         $yesterdayReports = $this->reportService->getDayReport(Carbon::yesterday()->toDateString());
 
@@ -63,7 +60,8 @@ class DashboardController extends Controller
             'thisMonthIncome' => $thisMonthIncome,
             'date' => Carbon::now(),
             'todayReports' => $todayReports,
-            'yesterdayReports' => $yesterdayReports
+            'yesterdayReports' => $yesterdayReports,
+            'title' => "Home | Financekuu"
         ]);
     }
 
@@ -95,22 +93,40 @@ class DashboardController extends Controller
             $labelData = $this->reportService->days;
         }
 
+        $reports = $this->reportService->getAllReports();
+
+        $events = Event::latest()->get();
+
         return view('dashboard.statistics', [
             'user' => auth()->user(),
             'spendingData' => $spendingData,
             'incomeData' => $incomeData,
             'labelData' => $labelData,
-            'rangeTimeSelected' => $rangeTime
+            'rangeTimeSelected' => $rangeTime,
+            'title' => "Statistics | Financekuu",
+            'reports' => $reports,
+            'events' => $events,
+            'date' => Carbon::now()
         ]);
     }
 
     public function actions()
     {
-        return view('dashboard.actions', ['user' => auth()->user()]);
+        return redirect()->route('dashboard.actions.reports');
+    }
+
+    public function events()
+    {
+        return view('dashboard.actions', ['user' => auth()->user(), 'title' => 'Actions | Financekuu']);
+    }
+
+    public function reports()
+    {
+        return view('dashboard.actions', ['user' => auth()->user(), 'title' => 'Actions | Financekuu']);
     }
 
     public function settings(Request $request)
     {
-        return view('dashboard.settings', ['user' => $request->user()]);
+        return view('dashboard.settings', ['user' => $request->user(), 'title' => "Settings | Financekuu"]);
     }
 }

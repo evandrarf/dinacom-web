@@ -44,7 +44,7 @@ class ReportServiceImpl implements ReportService
         return $spendingBalance;
     }
 
-    function getAllReports(): array
+    function getAllReports()
     {
         return Report::latest()->get();
     }
