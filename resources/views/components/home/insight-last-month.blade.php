@@ -12,7 +12,7 @@
         <span class="font-poppins font-normal text-[10px] ">
             <span class="@if($balanceDiffLastMonthPercentage < 0) text-red-300 @else text-green-300 @endif">
                 @if($balanceDiffLastMonthPercentage
-                > 0) +@endif{{number_format($balanceDiffLastMonthPercentage, 2, ',' , '.' )}}%</span> vs last month
+                > 0) +@endif{{number_format($balanceDiffLastMonthPercentage, 2, ',' , '.' )}}%</span> vs last 2 months
         </span>
     </div>
 </div>

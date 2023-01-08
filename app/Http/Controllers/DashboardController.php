@@ -60,7 +60,17 @@ class DashboardController extends Controller
 
     public function stats()
     {
-        return view('layouts.dashboard', ['user' => auth()->user(),]);
+        $week = [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()];
+        $weekSpending = $this->reportService->getWeekSpendingOne($week);
+        $weekIncome = $this->reportService->getWeekIncomeOne($week);
+
+        $day = $this->reportService->days;
+        return view('dashboard.statistics', [
+            'user' => auth()->user(),
+            'spendingData' => $weekSpending,
+            'incomeData' => $weekIncome,
+            'labelData' => $day,
+        ]);
     }
 
     public function actions()
@@ -68,8 +78,8 @@ class DashboardController extends Controller
         return view('dashboard.actions', ['user' => auth()->user()]);
     }
 
-    public function settings()
+    public function settings(Request $request)
     {
-        return view('layouts.dashboard');
+        return view('dashboard.settings', ['user' => $request->user()]);
     }
 }

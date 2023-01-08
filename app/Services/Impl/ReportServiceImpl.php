@@ -4,11 +4,14 @@ namespace App\Services\Impl;
 
 use App\Models\Report;
 use App\Services\ReportService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
 class ReportServiceImpl implements ReportService
 {
+    public $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
     function getAllBalance(): int
     {
         return $this->getIncomeBalance() - $this->getSpendingBalance();
@@ -42,7 +45,7 @@ class ReportServiceImpl implements ReportService
 
     function getAllReports(): array
     {
-        return Report::get();
+        return Report::latest()->get();
     }
 
     function getReportsInMonth($month)
@@ -97,7 +100,62 @@ class ReportServiceImpl implements ReportService
     function getDayReport($day)
     {
         return Report::select('*')
-            ->whereDate('created_at', $day)
+            ->whereDate('created_at', $day)->latest()->get();
+    }
+
+    function getWeekReports($week)
+    {
+        return Report::select("*")
+            ->whereBetween(
+                'date',
+                $week
+            )
             ->get();
+    }
+
+    function getWeekIncomeOne($week)
+    {
+        $reports = $this->getWeekReports($week);
+        $income = [];
+
+        $days = $this->days;
+
+        foreach ($days as $day) {
+            $income[$day] = 0;
+        }
+
+
+        foreach ($reports as $report) {
+            $day = Carbon::createFromFormat('Y-m-d', $report->date)->format('l');
+
+            if ($report->type == 'income') {
+                $income[$day] += $report->amount;
+            }
+        }
+
+        return $income;
+    }
+
+    function getWeekSpendingOne($week)
+    {
+        $reports = $this->getWeekReports($week);
+
+        $spending = [];
+
+        $days = $this->days;
+
+        foreach ($days as $day) {
+            $spending[$day] = 0;
+        }
+
+
+        foreach ($reports as $report) {
+            $day = Carbon::createFromFormat('Y-m-d', $report->date)->format('l');
+            if ($report->type == 'spending') {
+                // dd($spending);
+                $spending[$day] += $report->amount;
+            }
+        }
+        return $spending;
     }
 }

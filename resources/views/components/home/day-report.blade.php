@@ -31,6 +31,10 @@
             @endif
             @endforeach
         </div>
+        @else
+        <p class="font-poppins  text-sm">
+            There is no report in this date
+        </p>
         @endif
         <h6 class="font-poppins font-medium text-base text-gray-400 mt-8 mb-4">Yesterday</h6>
         @if ($yesterdayReports->isNotEmpty())

@@ -63,9 +63,11 @@
                     </div>
                     @endif
                 </a>
-                <a href="" class="cursor-pointer items-center justify-between flex flex-row max-w-xs">
-                    <div class="w-12 h-12 rounded-full bg-blue-900 overflow-hidden">
-                        <img src="{{asset('storage/' . $user->profile_picture)}}" class="object-cover" alt="pfoile-pic">
+                <a href="{{route('dashboard.settings')}}"
+                    class="cursor-pointer items-center justify-between flex flex-row max-w-xs">
+                    <div class="w-12 h-12 rounded-full border-[1px] border-gray-200 shadow-sm overflow-hidden">
+                        <img src="{{asset('storage/' . $user->profile_picture)}}" class="object-cover"
+                            alt="profile-pic">
                     </div>
                     <div class="flex flex-col ml-4">
                         <p class="font-poppins font-medium text-base">{{$user->name}}</p>
@@ -74,11 +76,8 @@
                 </a>
             </div>
         </div>
-        <div class="h-full w-full mt-4 mb-4 flex flex-row pb-[60px] pt-8">
+        <div class="h-full w-full  mb-4 flex  pt-8">
             @yield('information')
-            <a href="https://icons8.com" class="text-sm text-gray-400" rel="noopener noreferrer" target="_blank">Icon
-                from
-                icons8.com</a>
         </div>
     </div>
 </div>

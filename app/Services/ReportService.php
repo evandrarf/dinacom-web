@@ -25,4 +25,10 @@ interface ReportService
     function getMonthReport($month);
 
     function getDayReport($day);
+
+    function getWeekIncomeOne($week);
+
+    function getWeekSpendingOne($week);
+
+    function getWeekReports($week);
 }
