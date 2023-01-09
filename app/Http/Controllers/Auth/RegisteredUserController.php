@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
             'profile_picture' => ['image']
         ]);
 
-        $photo = '/default.jpeg';
+        $photo = 'default.jpg';
 
         if ($request->hasFile('profile_picture')) {
             $photo = $request->file('profile_picture')->store('/profile_pictures');
