@@ -64,7 +64,9 @@
                 </div>
             </div>
             @if ($yesterdayReport != $yesterdayReports->last())
-            <div class="w-full h-[1px] bg-gray-200"></div>
+            <div class="w-full h-[1px] bg-gray-200">
+
+            </div>
             @endif
             @endforeach
         </div>
