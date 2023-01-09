@@ -1,6 +1,6 @@
 <div class="w-full h-[358px] bg-mainblue rounded-[40px] p-[2px] flex items-center justify-center">
     <div class="bg-white rounded-[40px] h-full w-2/3 flex justify-center flex-col p-14 ">
-        <h3 class="font-poppins font-medium text-xl">All Balance</h3>
+        <h3 class="font-poppins font-medium text-xl">Current Balance</h3>
         <h2 class="font-poppins font-semibold text-[48px] mt-2">IDR {{number_format($allBalance,0,',','.')}}</h2>
         <div class="w-full flex  font-poppins font-medium text-[20px] mt-10">
             <a href="{{route('dashboard.actions')}}"
