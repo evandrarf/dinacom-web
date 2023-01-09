@@ -14,6 +14,7 @@
         </div>
         <div class="">
             <p class="font-semibold">IDR {{number_format($report->amount, 0, ',', '.')}}</p>
+            <span class="font-light text-sm">{{ucfirst($report->type)}}</span>
         </div>
     </div>
     @if ($report != $reports->last())
