@@ -14,6 +14,8 @@ class EventController extends Controller
         $event->name = $request->name;
         $event->estimated_cost = $request->estimated_cost;
         $event->date = $request->date;
+        $event->user_id = $request->user()->id;
+
 
         $event->save();
 

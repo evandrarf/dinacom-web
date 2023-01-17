@@ -20,11 +20,6 @@
                 @include('components.statistics.all-events')
             </div>
         </div>
-        <div class="w-full h-1/3 overflow-y-auto ">
-            <div class="">
-
-            </div>
-        </div>
     </div>
 </div>
 

@@ -1,7 +1,7 @@
-<div class="w-1/2 h-full mt-4 px-6">
+<div class="w-full h-full flex flex-col items-center px-6 mt-4">
     <h2 class="font-poppins font-medium text-[20px]">Create New Report</h2>
     <form action="{{route('reports.store')}}" method="POST"
-        class="flex flex-col w-full h-ful font-normal  font-poppins text-base text-gray-400">
+        class="flex flex-col w-1/2 h-ful font-normal  font-poppins text-base text-gray-400">
         @csrf
         <input type="text" name="name" value="{{old('name')}}"
             class="border h-12 border-gray-200 focus:ring-0 outline-none focus:outline-none rounded mt-4 mb-4 placeholder:font-poppins placeholder:text-base placeholder:text-gray-400"

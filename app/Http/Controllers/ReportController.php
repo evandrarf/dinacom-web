@@ -16,6 +16,7 @@ class ReportController extends Controller
         $report->note = $request->note;
         $report->date = $request->date;
         $report->type = $request->type;
+        $report->user_id = $request->user()->id;
 
         $report->save();
 

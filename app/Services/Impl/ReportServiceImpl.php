@@ -20,7 +20,7 @@ class ReportServiceImpl implements ReportService
 
     function getIncomeBalance(): int
     {
-        $incomeReports = Report::select('amount')->where('type', 'income')->get();
+        $incomeReports = Report::where('user_id', auth()->user()->id)->select('amount')->where('type', 'income')->get();
 
         $incomeBalance = 0;
 
@@ -33,7 +33,7 @@ class ReportServiceImpl implements ReportService
 
     function getSpendingBalance(): int
     {
-        $spendingReports = Report::select('amount')->where('type', 'spending')->get();
+        $spendingReports = Report::where('user_id', auth()->user()->id)->select('amount')->where('type', 'spending')->get();
 
         $spendingBalance = 0;
 
@@ -46,12 +46,12 @@ class ReportServiceImpl implements ReportService
 
     function getAllReports()
     {
-        return Report::latest()->get();
+        return Report::where('user_id', auth()->user()->id)->latest()->get();
     }
 
     function getReportsInMonth($month)
     {
-        $reports = Report::select('*')
+        $reports = Report::where('user_id', auth()->user()->id)->select('*')
             ->whereMonth('date', $month)
             ->get();
 
@@ -67,7 +67,7 @@ class ReportServiceImpl implements ReportService
 
     function getMonthReport($month)
     {
-        return Report::select('*')
+        return Report::where('user_id', auth()->user()->id)->select('*')
             ->whereMonth('date', $month)
             ->get();
     }
@@ -100,18 +100,18 @@ class ReportServiceImpl implements ReportService
 
     function getDayReport($day)
     {
-        return Report::select('*')
+        return Report::where('user_id', auth()->user()->id)->select('*')
             ->whereDate('created_at', $day)->latest()->get();
     }
 
     function getYearReports($year)
     {
-        return Report::whereYear('date', $year)->get();
+        return Report::where('user_id', auth()->user()->id)->whereYear('date', $year)->get();
     }
 
     function getWeekReports($week)
     {
-        return Report::select("*")
+        return Report::where('user_id', auth()->user()->id)->select("*")
             ->whereBetween(
                 'date',
                 $week

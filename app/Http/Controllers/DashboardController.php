@@ -9,124 +9,131 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-  private ReportService $reportService;
+    private ReportService $reportService;
 
-  public function __construct(ReportService $reportService)
-  {
-    $this->reportService = $reportService;
-  }
-
-  public function index()
-  {
-    $allBalance = $this->reportService->getAllBalance();
-    $spendingBalance = $this->reportService->getSpendingBalance();
-    $incomeBalance = $this->reportService->getIncomeBalance();
-
-
-    $thisMonthBalance = $this->reportService->getMonthBalance(Carbon::now()->month);
-    $lastMonthBalance = $this->reportService->getMonthBalance(Carbon::now()->subMonth()->format('m'));
-    $twoMonthsBeforeBalance = $this->reportService->getMonthBalance(Carbon::now()->subMonths(2)->format('m'));
-    $balanceDiffLastMonthPercentage = $twoMonthsBeforeBalance;
-
-    if ($twoMonthsBeforeBalance != 0) {
-
-      $balanceDiffLastMonthPercentage = ($lastMonthBalance - $twoMonthsBeforeBalance) / $twoMonthsBeforeBalance * 100;
+    public function __construct(ReportService $reportService)
+    {
+        $this->reportService = $reportService;
     }
 
+    public function index()
+    {
+        $allBalance = $this->reportService->getAllBalance();
+        $spendingBalance = $this->reportService->getSpendingBalance();
+        $incomeBalance = $this->reportService->getIncomeBalance();
 
-    $balanceDiff = $thisMonthBalance - $lastMonthBalance;
-    $balanceDiffPercentage = $thisMonthBalance;
 
-    if ($lastMonthBalance != 0) {
-      $balanceDiffPercentage = $balanceDiff / $lastMonthBalance * 100;
+        $thisMonthBalance = $this->reportService->getMonthBalance(Carbon::now()->month);
+        $lastMonthBalance = $this->reportService->getMonthBalance(Carbon::now()->subMonth()->format('m'));
+        $twoMonthsBeforeBalance = $this->reportService->getMonthBalance(Carbon::now()->subMonths(2)->format('m'));
+        $balanceDiffLastMonthPercentage = $twoMonthsBeforeBalance;
+
+        if ($twoMonthsBeforeBalance != 0) {
+
+            $balanceDiffLastMonthPercentage = ($lastMonthBalance - $twoMonthsBeforeBalance) / $twoMonthsBeforeBalance * 100;
+        }
+
+
+        $balanceDiff = $thisMonthBalance - $lastMonthBalance;
+        $balanceDiffPercentage = $thisMonthBalance;
+
+        if ($lastMonthBalance != 0) {
+            $balanceDiffPercentage = $balanceDiff / $lastMonthBalance * 100;
+        }
+
+        $thisMonthIncome = $this->reportService->getMonthIncomeBalance(Carbon::now()->month);
+        $thisMonthSpending =  $this->reportService->getMonthSpendingBalance(Carbon::now()->month);
+
+        $todayReports = $this->reportService->getDayReport(Carbon::today()->toDateString());
+        $yesterdayReports = $this->reportService->getDayReport(Carbon::yesterday()->toDateString());
+
+        return view('dashboard.index', [
+            'user' => auth()->user(),
+            'allBalance' => $allBalance,
+            'incomeBalance' => $incomeBalance,
+            'spendingBalance' => $spendingBalance,
+            'thisMonthBalance' => $thisMonthBalance,
+            'lastMonthBalance' => $lastMonthBalance,
+            'balanceDiffPercentage' => $balanceDiffPercentage,
+            'balanceDiffLastMonthPercentage' => $balanceDiffLastMonthPercentage,
+            'thisMonthSpending' => $thisMonthSpending,
+            'thisMonthIncome' => $thisMonthIncome,
+            'date' => Carbon::now(),
+            'todayReports' => $todayReports,
+            'yesterdayReports' => $yesterdayReports,
+            'title' => "Home | Financekuu"
+        ]);
     }
 
-    $thisMonthIncome = $this->reportService->getMonthIncomeBalance(Carbon::now()->month);
-    $thisMonthSpending =  $this->reportService->getMonthSpendingBalance(Carbon::now()->month);
+    public function stats(Request $request)
+    {
+        $rangeTime = $request->query('rangeTime');
 
-    $todayReports = $this->reportService->getDayReport(Carbon::today()->toDateString());
-    $yesterdayReports = $this->reportService->getDayReport(Carbon::yesterday()->toDateString());
+        $spendingData = null;
+        $incomeData = null;
+        $labelData = [];
 
-    return view('dashboard.index', [
-      'user' => auth()->user(),
-      'allBalance' => $allBalance,
-      'incomeBalance' => $incomeBalance,
-      'spendingBalance' => $spendingBalance,
-      'thisMonthBalance' => $thisMonthBalance,
-      'lastMonthBalance' => $lastMonthBalance,
-      'balanceDiffPercentage' => $balanceDiffPercentage,
-      'balanceDiffLastMonthPercentage' => $balanceDiffLastMonthPercentage,
-      'thisMonthSpending' => $thisMonthSpending,
-      'thisMonthIncome' => $thisMonthIncome,
-      'date' => Carbon::now(),
-      'todayReports' => $todayReports,
-      'yesterdayReports' => $yesterdayReports,
-      'title' => "Home | Financekuu"
-    ]);
-  }
+        if ($rangeTime == 'month') {
+            $date = Carbon::now();
+            $spendingData = $this->reportService->getMonthSpendingOne($date);
+            $incomeData = $this->reportService->getMonthIncomeOne($date);
+            for ($i = 1; $i <= $this->reportService->getMonthTotalDays($date); $i++) {
+                $labelData[] = (string)$i;
+            }
+        } else if ($rangeTime == 'year') {
+            $year = Carbon::now()->year;
+            $spendingData = $this->reportService->getYearSpendingOne($year);
+            $incomeData = $this->reportService->getYearIncomeOne($year);
+            $labelData = $this->reportService->months;
+        } else {
 
-  public function stats(Request $request)
-  {
-    $rangeTime = $request->query('rangeTime');
+            $week = [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()];
+            $spendingData = $this->reportService->getWeekSpendingOne($week);
+            $incomeData = $this->reportService->getWeekIncomeOne($week);
+            $labelData = $this->reportService->days;
+        }
 
-    $spendingData = null;
-    $incomeData = null;
-    $labelData = [];
+        $reports = $this->reportService->getAllReports();
 
-    if ($rangeTime == 'month') {
-      $date = Carbon::now();
-      $spendingData = $this->reportService->getMonthSpendingOne($date);
-      $incomeData = $this->reportService->getMonthIncomeOne($date);
-      for ($i = 1; $i <= $this->reportService->getMonthTotalDays($date); $i++) {
-        $labelData[] = (string)$i;
-      }
-    } else if ($rangeTime == 'year') {
-      $year = Carbon::now()->year;
-      $spendingData = $this->reportService->getYearSpendingOne($year);
-      $incomeData = $this->reportService->getYearIncomeOne($year);
-      $labelData = $this->reportService->months;
-    } else {
+        $events = Event::where('user_id', $request->user()->id)->latest()->get();
 
-      $week = [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()];
-      $spendingData = $this->reportService->getWeekSpendingOne($week);
-      $incomeData = $this->reportService->getWeekIncomeOne($week);
-      $labelData = $this->reportService->days;
+        return view('dashboard.statistics', [
+            'user' => auth()->user(),
+            'spendingData' => $spendingData,
+            'incomeData' => $incomeData,
+            'labelData' => $labelData,
+            'rangeTimeSelected' => $rangeTime,
+            'title' => "Statistics | Financekuu",
+            'reports' => $reports,
+            'events' => $events,
+            'date' => Carbon::now()
+        ]);
     }
 
-    $reports = $this->reportService->getAllReports();
+    public function actions()
+    {
 
-    $events = Event::latest()->get();
+        return redirect()->route('dashboard.actions.reports');
+    }
 
-    return view('dashboard.statistics', [
-      'user' => auth()->user(),
-      'spendingData' => $spendingData,
-      'incomeData' => $incomeData,
-      'labelData' => $labelData,
-      'rangeTimeSelected' => $rangeTime,
-      'title' => "Statistics | Financekuu",
-      'reports' => $reports,
-      'events' => $events,
-      'date' => Carbon::now()
-    ]);
-  }
+    public function events(Request $request)
+    {
+        $reports = $this->reportService->getAllReports();
 
-  public function actions()
-  {
-    return redirect()->route('dashboard.actions.reports');
-  }
+        $events = Event::where('user_id', $request->user()->id)->latest()->get();
+        return view('dashboard.actions', ['user' => auth()->user(), 'title' => 'Actions | Financekuu', 'reports' => $reports, 'events' => $events]);
+    }
 
-  public function events()
-  {
-    return view('dashboard.actions', ['user' => auth()->user(), 'title' => 'Actions | Financekuu']);
-  }
+    public function reports(Request $request)
+    {
+        $reports = $this->reportService->getAllReports();
 
-  public function reports()
-  {
-    return view('dashboard.actions', ['user' => auth()->user(), 'title' => 'Actions | Financekuu']);
-  }
+        $events = Event::where('user_id', $request->user()->id)->latest()->get();
+        return view('dashboard.actions', ['user' => auth()->user(), 'title' => 'Actions | Financekuu', 'reports' => $reports, 'events' => $events]);
+    }
 
-  public function settings(Request $request)
-  {
-    return view('dashboard.settings', ['user' => $request->user(), 'title' => "Settings | Financekuu"]);
-  }
+    public function settings(Request $request)
+    {
+        return view('dashboard.settings', ['user' => $request->user(), 'title' => "Settings | Financekuu"]);
+    }
 }
