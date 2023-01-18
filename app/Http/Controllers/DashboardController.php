@@ -26,23 +26,23 @@ class DashboardController extends Controller
         $thisMonthBalance = $this->reportService->getMonthBalance(Carbon::now()->month);
         $lastMonthBalance = $this->reportService->getMonthBalance(Carbon::now()->subMonth()->format('m'));
         $twoMonthsBeforeBalance = $this->reportService->getMonthBalance(Carbon::now()->subMonths(2)->format('m'));
-        $balanceDiffLastMonthPercentage = $twoMonthsBeforeBalance;
+        $balanceDiffLastMonthPercentage = $lastMonthBalance;
 
-        if ($twoMonthsBeforeBalance != 0) {
+        if ($lastMonthBalance != 0) {
 
-            $balanceDiffLastMonthPercentage = ($lastMonthBalance - $twoMonthsBeforeBalance) / $twoMonthsBeforeBalance * 100;
+            $balanceDiffLastMonthPercentage = ($lastMonthBalance - $twoMonthsBeforeBalance) / $lastMonthBalance * 100;
         }
 
 
         $balanceDiff = $thisMonthBalance - $lastMonthBalance;
         $balanceDiffPercentage = $thisMonthBalance;
 
-        if ($lastMonthBalance != 0) {
-            $balanceDiffPercentage = $balanceDiff / $lastMonthBalance * 100;
+        if ($thisMonthBalance != 0) {
+            $balanceDiffPercentage = $balanceDiff / $thisMonthBalance * 100;
         }
 
         $thisMonthIncome = $this->reportService->getMonthIncomeBalance(Carbon::now()->month);
-        $thisMonthSpending =  $this->reportService->getMonthSpendingBalance(Carbon::now()->month);
+        $thisMonthSpending = $this->reportService->getMonthSpendingBalance(Carbon::now()->month);
 
         $todayReports = $this->reportService->getDayReport(Carbon::today()->toDateString());
         $yesterdayReports = $this->reportService->getDayReport(Carbon::yesterday()->toDateString());
@@ -78,7 +78,7 @@ class DashboardController extends Controller
             $spendingData = $this->reportService->getMonthSpendingOne($date);
             $incomeData = $this->reportService->getMonthIncomeOne($date);
             for ($i = 1; $i <= $this->reportService->getMonthTotalDays($date); $i++) {
-                $labelData[] = (string)$i;
+                $labelData[] = (string) $i;
             }
         } else if ($rangeTime == 'year') {
             $year = Carbon::now()->year;
